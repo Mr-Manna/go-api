@@ -12,16 +12,13 @@ import (
 func main(){
 
 	sqlStmt := `
-		create table Profile (id integer not null primary key, Name text, Age integer);
+		CREATE TABLE IF NOT EXISTS Profile (id integer not null primary key, Name text, Age integer);
 	`
-	db.Db.Exec(sqlStmt)
-
-	// if err != nil {
-	// 	fmt.Printf("%q: %s\n", err, sqlStmt)
-	// 	return
-	// }
+	db.CreateTable(sqlStmt)
+	db.Db.Close()
 
 	http.HandleFunc("/", handler.IndexHandler)
+	http.HandleFunc("/users", handler.HandleUser)
 	http_error := http.ListenAndServe("localhost:3003", nil)
 
 	if http_error != nil{
